@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZeycaNode — Blockchain Validator</title>
+  <meta name="description" content="Professional validator infrastructure on Pactus, NEAR, Safrochain, 0G and more." />
+  <link rel="icon" type="image/svg+xml" href="/zeyca-logo.svg" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0d0f14; color: #f0f0f0; font-family: 'Inter', system-ui, sans-serif; }
+
+    /* NAV */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(13,15,20,0.95); position: sticky; top: 0; z-index: 99;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; color: #f0f0f0; text-decoration: none; cursor: pointer; }
+    .logo img { width: 36px; height: 36px; border-radius: 6px; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { color: #7a7e8e; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; cursor: pointer; }
+    .nav-links a:hover { color: #f0f0f0; }
+    .lang-btn { background: #1a1d27; border: 1px solid rgba(255,255,255,0.07); color: #7a7e8e; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+    .lang-btn:hover { color: #f0f0f0; border-color: #7c6af7; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 5rem 2rem 4rem; background: radial-gradient(ellipse at 50% 0%, rgba(124,106,247,0.12) 0%, transparent 70%); }
+    .hero-logo { display: flex; justify-content: center; margin-bottom: 1.5rem; }
+    .hero-logo img { width: 80px; height: 80px; border-radius: 12px; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(61,220,151,0.1); border: 1px solid rgba(61,220,151,0.25); color: #3ddc97; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; margin-bottom: 1.5rem; }
+    .dot { width: 6px; height: 6px; background: #3ddc97; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    h1 { font-size: 3rem; font-weight: 800; line-height: 1.15; margin-bottom: 1rem; color: #f0f0f0; }
+    h1 span { background: linear-gradient(135deg, #7c6af7, #5de0c5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-sub { color: #7a7e8e; font-size: 1.1rem; max-width: 520px; margin: 0 auto 2rem; line-height: 1.6; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: linear-gradient(135deg, #7c6af7, #6358d4); color: #fff; padding: 12px 28px; border-radius: 10px; border: none; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-sec { background: #1a1d27; color: #f0f0f0; padding: 12px 28px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); font-size: 0.95rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s; }
+    .btn-sec:hover { border-color: #7c6af7; }
+
+    /* STATS */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; max-width: 900px; margin: 3rem auto 0; padding: 0 2rem; }
+    .stat-card { background: #13161e; border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 1.25rem; text-align: center; }
+    .stat-num { font-size: 1.8rem; font-weight: 700; color: #5de0c5; }
+    .stat-label { color: #7a7e8e; font-size: 0.8rem; margin-top: 4px; }
+
+    /* SECTIONS */
+    section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem; color: #f0f0f0; }
+    .section-sub { color: #7a7e8e; margin-bottom: 2.5rem; font-size: 0.95rem; }
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 0; }
+
+    /* NETWORKS */
+    .networks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .net-card { background: #13161e; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: border-color 0.2s; }
+    .net-card:hover { border-color: rgba(124,106,247,0.4); }
+    .net-header { display: flex; align-items: center; gap: 12px; }
+    .net-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; }
+    .icon-pactus   { background: rgba(124,106,247,0.2); color: #c4bcff; }
+    .icon-near     { background: rgba(93,224,197,0.2);  color: #5de0c5; }
+    .icon-safro    { background: rgba(255,180,50,0.2);  color: #ffcf70; }
+    .icon-0g       { background: rgba(61,220,151,0.2);  color: #3ddc97; }
+    .icon-republic { background: rgba(124,106,247,0.2); color: #c4bcff; }
+    .net-name { font-weight: 600; font-size: 1rem; color: #f0f0f0; }
+    .net-type { margin-top: 4px; }
+    .tag-mainnet { display: inline-block; background: rgba(61,220,151,0.12); color: #3ddc97; border: 1px solid rgba(61,220,151,0.25); padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+    .tag-testnet  { display: inline-block; background: rgba(124,106,247,0.12); color: #a89cf7; border: 1px solid rgba(124,106,247,0.3); padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+    .net-links { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .net-link { background: #1a1d27; border: 1px solid rgba(255,255,255,0.07); color: #a0a4b4; padding: 7px 6px; border-radius: 8px; font-size: 0.76rem; text-decoration: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .net-link:hover { color: #f0f0f0; border-color: #7c6af7; }
+    .net-link.disabled { opacity: 0.35; pointer-events: none; }
+
+    /* GUIDES */
+    .guides-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    .guide-card { background: #13161e; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.5rem; transition: border-color 0.2s; }
+    .guide-card:hover { border-color: rgba(93,224,197,0.4); }
+    .guide-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .guide-title { font-weight: 600; margin-bottom: 6px; color: #f0f0f0; }
+    .guide-desc { color: #7a7e8e; font-size: 0.85rem; line-height: 1.5; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid rgba(255,255,255,0.07); text-align: center; padding: 2rem; color: #7a7e8e; font-size: 0.85rem; margin-top: 2rem; }
+    footer a { color: #7c6af7; text-decoration: none; }
+
+    /* LANG */
+    .inline-en { display: inline; } .inline-tr { display: none; }
+    .tr-active .inline-en { display: none; } .tr-active .inline-tr { display: inline; }
+    .lang-en { display: block; } .lang-tr { display: none; }
+    .tr-active .lang-en { display: none; } .tr-active .lang-tr { display: block; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <img src="/zeyca-logo.svg" alt="ZeycaNode" />
+      ZeycaNode
+    </div>
+    <div class="nav-links">
+      <a onclick="scrollToId('networks')"><span class="inline-en">Networks</span><span class="inline-tr">Ağlar</span></a>
+      <a onclick="scrollToId('guides')"><span class="inline-en">Guides</span><span class="inline-tr">Rehberler</span></a>
+      <a href="https://explorer.zeycanode.com" target="_blank">Explorer ↗</a>
+      <button class="lang-btn" onclick="toggleLang()">TR / EN</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-logo">
+      <img src="/zeyca-logo.svg" alt="ZeycaNode" />
+    </div>
+    <div class="badge"><div class="dot"></div><span class="inline-en">Active Validator</span><span class="inline-tr">Aktif Validator</span></div>
+    <h1 class="lang-en">Securing<br><span>Blockchain Networks</span></h1>
+    <h1 class="lang-tr">Blockchain Ağlarını<br><span>Güvende Tutuyoruz</span></h1>
+    <p class="hero-sub lang-en">Professional validator infrastructure on Pactus, NEAR, Safrochain, 0G and more. Reliable, secure, and always online.</p>
+    <p class="hero-sub lang-tr">Pactus, NEAR, Safrochain, 0G ve daha fazlasında profesyonel validator altyapısı. Güvenilir, emniyetli ve her zaman çevrimiçi.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" onclick="scrollToId('networks')"><span class="inline-en">Stake with us</span><span class="inline-tr">Bizimle Stake Yap</span> →</a>
+      <a class="btn-sec" href="https://explorer.zeycanode.com" target="_blank"><span class="inline-en">View Explorer</span><span class="inline-tr">Explorer'a Git</span></a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">5+</div><div class="stat-label"><span class="inline-en">Active Networks</span><span class="inline-tr">Aktif Ağ</span></div></div>
+    <div class="stat-card"><div class="stat-num">99.9%</div><div class="stat-label"><span class="inline-en">Uptime</span><span class="inline-tr">Çalışma Süresi</span></div></div>
+    <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label"><span class="inline-en">Monitoring</span><span class="inline-tr">İzleme</span></div></div>
+    <div class="stat-card"><div class="stat-num">0%</div><div class="stat-label"><span class="inline-en">Slashing History</span><span class="inline-tr">Slashing Geçmişi</span></div></div>
+  </div>
+
+  <hr class="divider" style="margin-top:4rem">
+
+  <!-- NETWORKS -->
+  <section id="networks">
+    <div class="section-title"><span class="inline-en">Our Networks</span><span class="inline-tr">Ağlarımız</span></div>
+    <div class="section-sub"><span class="inline-en">Stake your tokens and explore our validator nodes</span><span class="inline-tr">Tokenlarınızı stake edin ve validator node'larımızı keşfedin</span></div>
+    <div class="networks-grid">
+
+      <div class="net-card">
+        <div class="net-header"><div class="net-icon icon-pactus">PAC</div><div><div class="net-name">Pactus</div><div class="net-type"><span class="tag-mainnet">Mainnet</span></div></div></div>
+        <div class="net-links">
+          <a class="net-link" href="https://pacviewer.com" target="_blank">🔍 Explorer</a>
+          <a class="net-link" href="https://pactus.org/user-guides/validator" target="_blank">💰 Stake</a>
+          <a class="net-link" onclick="scrollToId('guides')">📖 <span class="inline-en">Guide</span><span class="inline-tr">Rehber</span></a>
+        </div>
+      </div>
+
+      <div class="net-card">
+        <div class="net-header"><div class="net-icon icon-near">NEAR</div><div><div class="net-name">NEAR Protocol</div><div class="net-type"><span class="tag-mainnet">Mainnet</span></div></div></div>
+        <div class="net-links">
+          <a class="net-link" href="https://nearblocks.io" target="_blank">🔍 Explorer</a>
+          <a class="net-link" href="https://app.mynearwallet.com" target="_blank">💰 Stake</a>
+          <a class="net-link" onclick="scrollToId('guides')">📖 <span class="inline-en">Guide</span><span class="inline-tr">Rehber</span></a>
+        </div>
+      </div>
+
+      <div class="net-card">
+        <div class="net-header"><div class="net-icon icon-safro">SAF</div><div><div class="net-name">Safrochain</div><div class="net-type"><span class="tag-mainnet">Mainnet</span></div></div></div>
+        <div class="net-links">
+          <a class="net-link" href="https://explorer.zeycanode.com/safrochain" target="_blank">🔍 Explorer</a>
+          <a class="net-link disabled">💰 Stake</a>
+          <a class="net-link" onclick="scrollToId('guides')">📖 <span class="inline-en">Guide</span><span class="inline-tr">Rehber</span></a>
+        </div>
+      </div>
+
+      <div class="net-card">
+        <div class="net-header"><div class="net-icon icon-0g">0G</div><div><div class="net-name">0G (Alignment Node)</div><div class="net-type"><span class="tag-mainnet">Mainnet</span></div></div></div>
+        <div class="net-links">
+          <a class="net-link" href="https://0g.ai" target="_blank">🔍 Explorer</a>
+          <a class="net-link" href="https://0g.ai" target="_blank">💰 Stake</a>
+          <a class="net-link" onclick="scrollToId('guides')">📖 <span class="inline-en">Guide</span><span class="inline-tr">Rehber</span></a>
+        </div>
+      </div>
+
+      <div class="net-card">
+        <div class="net-header"><div class="net-icon icon-republic">REP</div><div><div class="net-name">Republic</div><div class="net-type"><span class="tag-testnet">Testnet</span></div></div></div>
+        <div class="net-links">
+          <a class="net-link" href="https://explorer.zeycanode.com/Republic-Testnet" target="_blank">🔍 Explorer</a>
+          <a class="net-link disabled">💰 Stake</a>
+          <a class="net-link" onclick="scrollToId('guides')">📖 <span class="inline-en">Guide</span><span class="inline-tr">Rehber</span></a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- GUIDES -->
+  <section id="guides">
+    <div class="section-title"><span class="inline-en">Installation Guides</span><span class="inline-tr">Kurulum Rehberleri</span></div>
+    <div class="section-sub"><span class="inline-en">Step-by-step guides for running nodes</span><span class="inline-tr">Node çalıştırmak için adım adım rehberler</span></div>
+    <div class="guides-grid">
+      <div class="guide-card">
+        <div class="guide-icon">⚡</div>
+        <div class="guide-title">Pactus Node Guide</div>
+        <div class="guide-desc"><span class="inline-en">Full setup guide for running a Pactus mainnet validator node.</span><span class="inline-tr">Pactus mainnet validator node kurulum rehberi.</span></div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🔗</div>
+        <div class="guide-title">Safrochain Node Guide</div>
+        <div class="guide-desc"><span class="inline-en">Step-by-step Safrochain mainnet node installation.</span><span class="inline-tr">Adım adım Safrochain mainnet node kurulumu.</span></div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🌐</div>
+        <div class="guide-title">0G Alignment Node Guide</div>
+        <div class="guide-desc"><span class="inline-en">How to set up a 0G alignment node on mainnet.</span><span class="inline-tr">0G alignment node kurulum rehberi.</span></div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🔷</div>
+        <div class="guide-title">NEAR Validator Guide</div>
+        <div class="guide-desc"><span class="inline-en">Everything you need to become a NEAR validator.</span><span class="inline-tr">NEAR validator olmak için ihtiyacınız olan her şey.</span></div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🏛️</div>
+        <div class="guide-title">Republic Node Guide</div>
+        <div class="guide-desc"><span class="inline-en">How to run a Republic testnet node.</span><span class="inline-tr">Republic testnet node kurulum rehberi.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+      <img src="/zeyca-logo.svg" alt="ZeycaNode" style="width:20px;height:20px;border-radius:3px" />
+      <a href="https://zeycanode.com">ZeycaNode</a>
+    </div>
+    <p>© 2026 ZeycaNode · Professional Blockchain Validator Infrastructure</p>
+    <p style="margin-top:8px">
+      <a href="https://explorer.zeycanode.com" style="margin:0 8px">Explorer</a> ·
+      <a href="https://twitter.com/zeycanode" style="margin:0 8px">Twitter</a>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  function scrollToId(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+  let isTr = false;
+  function toggleLang() { isTr = !isTr; document.getElementById('app').classList.toggle('tr-active', isTr); }
+</script>
+</body>
+</html>
